@@ -4,7 +4,7 @@
          <p class="text-xs-center">{{ text }}</p>
          <hr>
       </div>
-      <div class="wrap" v-else>
+      <div v-else class="wrap">
          <div class="msg" :class="{owner}">
             <small>
                <strong>{{ name }}</strong>

@@ -2,6 +2,20 @@
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8>
       <v-card min-width="400">
+
+        <v-snackbar
+          v-model="snackbar"
+          :timeout="6000"
+          top>
+          {{ msg }}  
+          <v-btn 
+            @click="snackbar = false"
+            color="pink" 
+            flat>
+            Close
+          </v-btn>
+        </v-snackbar>
+
         <v-card-title class="headline">Nuxt WebChat</v-card-title>
         <v-card-text>
           <v-form
@@ -54,7 +68,9 @@
     },
     data: () => ({
       valid: true,
+      snackbar: false,
       name: '',
+      msg: '',
       nameRules: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 16) || 'Name must be less than 16 characters',
@@ -65,6 +81,16 @@
       ],
     }),
 
+    mounted(){
+      const { message } = this.$route.query
+      if(message === 'noUser'){
+        this.msg = 'Enter user info.'
+      }else if(message === 'leftChat'){
+        this.msg = 'You have left the chat.'
+      }
+
+      this.snackbar = !!this.msg
+    },
     methods: {
       ...mapMutations(['SET_USER']),
       validate () {

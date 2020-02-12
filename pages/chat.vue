@@ -1,31 +1,41 @@
 <template>
   <div class="chat-wrap">
-    <div class="chat">
+    <div class="chat" ref="chat">
       <Message 
         v-for="(msg, index) in messages" 
         :key="index" 
         :name="msg.name"
         :text="msg.text"
-        owner/>
+        :owner="msg.id === user.id"/>
     </div>
-    <div class="chat-form"></div>
+    <div class="chat-form">
+      <ChatForm />
+    </div>
   </div>
 
 </template>
 
 <script>
   import Message from '@/components/Message'
+  import ChatForm from '@/components/ChatForm'
   import { mapState } from 'vuex'
   export default {
     name: "chat",
-    components: { Message },
+    components: { Message , ChatForm},
     head(){
       return{
         title: `Room ${ this.user.room }`
       }
     },
     middleware: ['chat'],
-    computed: mapState(['user', 'messages'])
+    computed: mapState(['user', 'messages']),
+    watch:{
+      messages(){
+        setTimeout(() =>{
+          this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
+        }) 
+      }
+    }
   }
 </script>
 

@@ -6,14 +6,13 @@
 
         <v-list-tile
           v-for="u in users"
-          :key="u.id"
-          @click="">
+          :key="u.id">
 
           <v-list-tile-content>
             <v-list-tile-title v-text="u.name"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
-            <v-icon :color="u.id === 2 ? 'primary' : 'grey'">chat_bubble</v-icon>
+            <v-icon :color="u.id === user.id ? 'primary' : 'grey'">chat_bubble</v-icon>
           </v-list-tile-action>
         </v-list-tile>
       </v-list>
@@ -39,17 +38,16 @@
   export default {
     data: () => ({
       drawer: true,
-      users: [
-        {id: 1, name: 'Vasya'},
-        {id: 2, name: 'Tanya'},
-      ]
     }),
-    computed: mapState(['user']),
+    computed: mapState(['user', 'users']),
     methods: {
       ...mapMutations(['CLEAR_DATA']),
       exit() {
-        this.$router.push('/?message=leftChat');
-        this.CLEAR_DATA();
+        this.$socket.emit('userLeft', this.user.id, () => {
+          this.$router.push('/?message=leftChat');
+          this.CLEAR_DATA();
+        })
+        
       }
     }
   };
